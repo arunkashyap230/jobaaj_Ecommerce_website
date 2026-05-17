@@ -41,7 +41,7 @@ function Cart() {
     );
   }
 
-  // RUPEES
+  // PRICE CALCULATION
   const shipping = 0;
 
   const tax = 0;
@@ -62,8 +62,16 @@ function Cart() {
           <div className="cart-items">
             {cart.map((item) => (
               <div key={item._id} className="cart-item">
-                <img src={product.image} alt={item.name} />
+                {/* IMAGE */}
+                <img
+                  src={
+                    item.image ||
+                    "https://via.placeholder.com/120x120/f1f5f9/64748b?text=Product"
+                  }
+                  alt={item.name}
+                />
 
+                {/* INFO */}
                 <div className="cart-item-info">
                   <span className="cart-item-cat">{item.category}</span>
 
@@ -76,9 +84,14 @@ function Cart() {
                   </div>
                 </div>
 
+                {/* ACTIONS */}
                 <div className="cart-item-actions">
                   <div className="qty-selector">
-                    <button onClick={() => updateQty(item._id, item.qty - 1)}>
+                    <button
+                      onClick={() =>
+                        updateQty(item._id, Math.max(1, item.qty - 1))
+                      }
+                    >
                       −
                     </button>
 
@@ -122,7 +135,7 @@ function Cart() {
             </div>
 
             <div className="summary-row">
-              <span>Tax (10%)</span>
+              <span>Tax</span>
 
               <span>₹{tax.toFixed(2)}</span>
             </div>
