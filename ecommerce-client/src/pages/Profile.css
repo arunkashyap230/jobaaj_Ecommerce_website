@@ -1,0 +1,45 @@
+.profile-page { padding: 48px 0 80px; }
+
+.profile-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px;
+  max-width: 560px;
+  text-align: center;
+}
+
+.profile-avatar {
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.profile-info {
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+.profile-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-row label {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.profile-row span {
+  font-weight: 600;
+}
