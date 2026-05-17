@@ -1,48 +1,29 @@
 const express = require("express");
+
 const router = express.Router();
 
 const multer = require("multer");
-const path = require("path");
 
-// Storage Config
-const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    cb(null, "uploads/");
-  },
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
-  filename(req, file, cb) {
-    cb(
-      null,
-      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`,
-    );
-  },
-});
+const cloudinary = require("../config/cloudinary");
 
-// Check File Type
-function checkFileType(file, cb) {
-  const filetypes = /jpg|jpeg|png|webp/;
+// Cloudinary Storage
+const storage = new CloudinaryStorage({
+  cloudinary,
 
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  params: {
+    folder: "ecommerce-products",
 
-  const mimetype = filetypes.test(file.mimetype);
-
-  if (extname && mimetype) {
-    cb(null, true);
-  } else {
-    cb("Images only!");
-  }
-}
-
-const upload = multer({
-  storage,
-  fileFilter(req, file, cb) {
-    checkFileType(file, cb);
+    allowed_formats: ["jpg", "png", "jpeg", "webp"],
   },
 });
+
+const upload = multer({ storage });
 
 // Upload Route
 router.post("/", upload.single("image"), (req, res) => {
-  res.send(`/${req.file.path}`);
+  res.send(req.file.path);
 });
 
 module.exports = router;
