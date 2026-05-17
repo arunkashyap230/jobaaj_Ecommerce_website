@@ -20,9 +20,9 @@ function ProductCard({ product }) {
       <div className="product-image-wrap">
         <img
           src={
-            product.image
-              ? `http://localhost:5000${product.image}`
-              : "https://via.placeholder.com/400x400/f1f5f9/64748b?text=Product"
+            product.image?.startsWith("http")
+              ? product.image
+              : "https://via.placeholder.com/400x400/f1f5f9/64748b?text=No+Image"
           }
           alt={product.name}
           loading="lazy"
@@ -46,7 +46,6 @@ function ProductCard({ product }) {
             strokeWidth="2.5"
           >
             <line x1="12" y1="5" x2="12" y2="19" />
-
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
         </button>
