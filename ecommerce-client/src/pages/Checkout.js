@@ -289,7 +289,7 @@ function Checkout() {
 
             {cart.map((i) => (
               <div key={i._id} className="checkout-item">
-                <img src={`http://localhost:5000${i.image}`} alt={i.name} />
+                <img src={i.image} alt={i.name} />
 
                 <div>
                   <strong>{i.name}</strong>

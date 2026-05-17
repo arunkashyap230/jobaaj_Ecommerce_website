@@ -384,11 +384,7 @@ function AdminDashboard() {
                   {products.map((p) => (
                     <tr key={p._id}>
                       <td>
-                        <img
-                          src={`http://localhost:5000${p.image}`}
-                          alt={p.name}
-                          className="table-img"
-                        />
+                        <img src={p.image} alt={p.name} className="table-img" />
                       </td>
 
                       <td>

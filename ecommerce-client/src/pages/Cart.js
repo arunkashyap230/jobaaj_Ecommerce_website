@@ -62,14 +62,7 @@ function Cart() {
           <div className="cart-items">
             {cart.map((item) => (
               <div key={item._id} className="cart-item">
-                <img
-                  src={
-                    item.image
-                      ? `http://localhost:5000${item.image}`
-                      : "https://via.placeholder.com/120"
-                  }
-                  alt={item.name}
-                />
+                <img src={product.image} alt={item.name} />
 
                 <div className="cart-item-info">
                   <span className="cart-item-cat">{item.category}</span>

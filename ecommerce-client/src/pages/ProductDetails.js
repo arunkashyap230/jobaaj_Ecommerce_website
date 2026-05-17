@@ -76,14 +76,7 @@ function ProductDetails() {
         <div className="pd-grid">
           {/* IMAGE */}
           <div className="pd-image">
-            <img
-              src={
-                product.image
-                  ? `http://localhost:5000${product.image}`
-                  : "https://via.placeholder.com/600x600/f1f5f9/64748b?text=Product"
-              }
-              alt={product.name}
-            />
+            <img src={product.image} alt={product.name} />
           </div>
 
           {/* INFO */}
