@@ -1,9 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
 import "./AdminDashboard.css";
+
+const normalizeProductRating = (value) => {
+  const rating = Number.parseFloat(String(value).replace(",", "."));
+
+  if (Number.isNaN(rating)) {
+    return 0;
+  }
+
+  return Math.min(5, Math.max(0, rating));
+};
 
 function AdminDashboard() {
   const { user } = useAuth();
@@ -15,6 +25,8 @@ function AdminDashboard() {
   const [products, setProducts] = useState([]);
 
   const [orders, setOrders] = useState([]);
+
+  const [users, setUsers] = useState([]);
 
   const [showForm, setShowForm] = useState(false);
 
@@ -29,19 +41,11 @@ function AdminDashboard() {
     image: "",
     category: "Electronics",
     countInStock: "",
+    rating: "0",
   });
 
-  useEffect(() => {
-    if (!user || !user.isAdmin) {
-      navigate("/");
-      return;
-    }
-
-    loadData();
-  }, [user]);
-
-  // Load Products & Orders
-  const loadData = async () => {
+  // Load Products, Orders & Users
+  const loadData = useCallback(async () => {
     try {
       const productsRes = await api.get("/products");
 
@@ -50,10 +54,23 @@ function AdminDashboard() {
       const ordersRes = await api.get("/orders");
 
       setOrders(ordersRes.data);
+
+      const usersRes = await api.get("/users");
+
+      setUsers(usersRes.data);
     } catch (error) {
       console.log(error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (!user || !user.isAdmin) {
+      navigate("/");
+      return;
+    }
+
+    loadData();
+  }, [user, navigate, loadData]);
 
   // Upload Image
   const uploadFileHandler = async (e) => {
@@ -96,12 +113,19 @@ function AdminDashboard() {
     e.preventDefault();
 
     try {
+      const productPayload = {
+        ...form,
+        price: Number(form.price),
+        countInStock: Number(form.countInStock),
+        rating: normalizeProductRating(form.rating),
+      };
+
       if (editing) {
-        await api.put(`/products/${editing}`, form);
+        await api.put(`/products/${editing}`, productPayload);
 
         toast.success("Product updated");
       } else {
-        await api.post("/products", form);
+        await api.post("/products", productPayload);
 
         toast.success("Product created");
       }
@@ -117,6 +141,7 @@ function AdminDashboard() {
         image: "",
         category: "Electronics",
         countInStock: "",
+        rating: "0",
       });
 
       loadData();
@@ -138,6 +163,7 @@ function AdminDashboard() {
       image: p.image,
       category: p.category,
       countInStock: p.countInStock,
+      rating: p.rating || 0,
     });
 
     setShowForm(true);
@@ -155,6 +181,21 @@ function AdminDashboard() {
       loadData();
     } catch (error) {
       toast.error("Delete failed");
+    }
+  };
+
+  // Delete User
+  const handleDeleteUser = async (id) => {
+    if (!window.confirm("Delete this user?")) return;
+
+    try {
+      await api.delete(`/users/${id}`);
+
+      toast.success("User deleted");
+
+      loadData();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "User delete failed");
     }
   };
 
@@ -191,6 +232,12 @@ function AdminDashboard() {
           </div>
 
           <div className="stat-card">
+            <small>Total Users</small>
+
+            <strong>{users.length}</strong>
+          </div>
+
+          <div className="stat-card">
             <small>Revenue</small>
 
             <strong>
@@ -213,6 +260,13 @@ function AdminDashboard() {
             onClick={() => setTab("orders")}
           >
             Orders
+          </button>
+
+          <button
+            className={tab === "users" ? "active" : ""}
+            onClick={() => setTab("users")}
+          >
+            Users
           </button>
         </div>
 
@@ -311,6 +365,27 @@ function AdminDashboard() {
                       }
                     />
                   </div>
+
+                  <div className="form-group">
+                    <label className="form-label">Rating (0-5)</label>
+
+                    <input
+                      type="number"
+                      min="0"
+                      max="5"
+                      step="0.1"
+                      inputMode="decimal"
+                      className="form-input"
+                      required
+                      value={form.rating}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          rating: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
                 </div>
 
                 {/* IMAGE */}
@@ -327,7 +402,11 @@ function AdminDashboard() {
 
                   {form.image && (
                     <img
-                      src={`http://localhost:5000${form.image}`}
+                      src={
+                        form.image.startsWith("http")
+                          ? form.image
+                          : `http://localhost:5000${form.image}`
+                      }
                       alt="preview"
                       style={{
                         width: "120px",
@@ -376,6 +455,8 @@ function AdminDashboard() {
 
                     <th>Stock</th>
 
+                    <th>Rating</th>
+
                     <th></th>
                   </tr>
                 </thead>
@@ -396,6 +477,8 @@ function AdminDashboard() {
                       <td>₹{p.price.toFixed(2)}</td>
 
                       <td>{p.countInStock}</td>
+
+                      <td>★ {Number(p.rating || 0).toFixed(1)}</td>
 
                       <td>
                         <button
@@ -468,6 +551,62 @@ function AdminDashboard() {
                           onClick={() => markDelivered(o._id)}
                         >
                           Mark Delivered
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* USERS */}
+        {tab === "users" && (
+          <div className="admin-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+
+                  <th>Email</th>
+
+                  <th>Role</th>
+
+                  <th>Joined</th>
+
+                  <th></th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {users.map((u) => (
+                  <tr key={u._id}>
+                    <td>
+                      <strong>{u.name}</strong>
+                    </td>
+
+                    <td>{u.email}</td>
+
+                    <td>
+                      <span
+                        className={`status-badge ${
+                          u.isAdmin ? "delivered" : "pending"
+                        }`}
+                      >
+                        {u.isAdmin ? "Admin" : "User"}
+                      </span>
+                    </td>
+
+                    <td>{new Date(u.createdAt).toLocaleDateString()}</td>
+
+                    <td>
+                      {!u.isAdmin && (
+                        <button
+                          className="btn-icon danger"
+                          onClick={() => handleDeleteUser(u._id)}
+                        >
+                          Delete
                         </button>
                       )}
                     </td>

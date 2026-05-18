@@ -59,11 +59,9 @@ function ProductCard({ product }) {
         <div className="product-footer">
           <span className="product-price">₹{product.price?.toFixed(2)}</span>
 
-          {product.rating > 0 && (
-            <span className="product-rating">
-              ★ {product.rating.toFixed(1)}
-            </span>
-          )}
+          <span className="product-rating">
+            ★ {Number(product.rating || 0).toFixed(1)}
+          </span>
         </div>
       </div>
     </Link>

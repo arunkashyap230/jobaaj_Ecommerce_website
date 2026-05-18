@@ -10,6 +10,7 @@ function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const category = searchParams.get("category") || "All";
 
@@ -17,12 +18,16 @@ function Home() {
     setLoading(true);
     api
       .get("/products", {
-        params: { search, category: category === "All" ? "" : category },
+        params: {
+          keyword: search,
+          category: category === "All" ? "" : category,
+          sort,
+        },
       })
       .then((res) => setProducts(res.data))
       .catch(() => setProducts([]))
       .finally(() => setLoading(false));
-  }, [search, category]);
+  }, [search, category, sort]);
 
   const setCategory = (cat) => {
     if (cat === "All") setSearchParams({});
@@ -153,6 +158,18 @@ function Home() {
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
+            <select
+              className="sort-select"
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+              aria-label="Sort products"
+            >
+              <option value="">Newest First</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+              <option value="rating_desc">Rating: High to Low</option>
+            </select>
+
             <div className="category-pills">
               {CATEGORIES.map((cat) => (
                 <button

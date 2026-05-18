@@ -25,7 +25,7 @@
 }
 
 .hero-title {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 700;
   line-height: 1.05;
@@ -63,7 +63,7 @@
 }
 
 .hero-stats strong {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 1.8rem;
   color: var(--text);
 }
@@ -202,6 +202,26 @@
   box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.06);
 }
 
+.sort-select {
+  width: min(100%, 260px);
+  margin: 0 auto;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 100px;
+  background: var(--white);
+  color: var(--text);
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.sort-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.06);
+}
+
 .category-pills {
   display: flex;
   gap: 8px;
@@ -250,15 +270,33 @@
 }
 
 @media (max-width: 968px) {
-  .hero-inner { grid-template-columns: 1fr; }
-  .hero-visual { height: 400px; max-width: 500px; margin: 0 auto; }
-  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .hero-inner {
+    grid-template-columns: 1fr;
+  }
+  .hero-visual {
+    height: 400px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 600px) {
-  .hero { padding: 48px 0 60px; }
-  .hero-stats { gap: 20px; }
-  .hero-stats strong { font-size: 1.4rem; }
-  .features-grid { grid-template-columns: 1fr; }
-  .products-section { padding: 56px 0; }
+  .hero {
+    padding: 48px 0 60px;
+  }
+  .hero-stats {
+    gap: 20px;
+  }
+  .hero-stats strong {
+    font-size: 1.4rem;
+  }
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  .products-section {
+    padding: 56px 0;
+  }
 }
