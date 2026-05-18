@@ -2,7 +2,18 @@ const Order = require("../models/Order");
 
 const createOrder = async (req, res) => {
   try {
-    const { orderItems, shippingAddress, paymentMethod, totalPrice } = req.body;
+    const {
+      orderItems,
+      shippingAddress,
+      paymentMethod,
+      paymentResult,
+      itemsPrice,
+      shippingPrice,
+      taxPrice,
+      totalPrice,
+      isPaid,
+      paidAt,
+    } = req.body;
     if (!orderItems || orderItems.length === 0) {
       return res.status(400).json({ message: "No order items" });
     }
@@ -11,7 +22,13 @@ const createOrder = async (req, res) => {
       orderItems,
       shippingAddress,
       paymentMethod,
+      paymentResult,
+      itemsPrice,
+      shippingPrice,
+      taxPrice,
       totalPrice,
+      isPaid: Boolean(isPaid),
+      paidAt: isPaid ? paidAt || Date.now() : undefined,
     });
     const created = await order.save();
     res.status(201).json(created);
@@ -43,6 +60,7 @@ const updateOrderToDelivered = async (req, res) => {
     const order = await Order.findById(req.params.id);
     if (order) {
       order.isDelivered = true;
+      order.deliveredAt = Date.now();
       const updated = await order.save();
       res.json(updated);
     } else {
@@ -53,4 +71,9 @@ const updateOrderToDelivered = async (req, res) => {
   }
 };
 
-module.exports = { createOrder, getMyOrders, getAllOrders, updateOrderToDelivered };
+module.exports = {
+  createOrder,
+  getMyOrders,
+  getAllOrders,
+  updateOrderToDelivered,
+};

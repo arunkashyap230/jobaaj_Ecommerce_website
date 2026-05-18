@@ -19,11 +19,22 @@ const orderSchema = new mongoose.Schema(
       country: String,
     },
     paymentMethod: { type: String, default: "Cash on Delivery" },
+    paymentResult: {
+      id: String,
+      status: String,
+      update_time: String,
+      email_address: String,
+    },
+    itemsPrice: { type: Number, required: true, default: 0 },
+    shippingPrice: { type: Number, required: true, default: 0 },
+    taxPrice: { type: Number, required: true, default: 0 },
     totalPrice: { type: Number, required: true, default: 0 },
     isPaid: { type: Boolean, default: false },
+    paidAt: Date,
     isDelivered: { type: Boolean, default: false },
+    deliveredAt: Date,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Order", orderSchema);

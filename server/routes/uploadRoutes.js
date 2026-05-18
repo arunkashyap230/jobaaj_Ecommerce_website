@@ -3,6 +3,7 @@ const router = express.Router();
 
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
+const { protect, admin } = require("../middleware/authMiddleware");
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -14,8 +15,11 @@ const storage = multer.memoryStorage();
 
 const upload = multer({ storage });
 
-router.post("/", upload.single("image"), async (req, res) => {
+router.post("/", protect, admin, upload.single("image"), async (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ message: "No image file uploaded" });
+    }
     const result = await cloudinary.uploader.upload_stream(
       {
         folder: "ecommerce-products",

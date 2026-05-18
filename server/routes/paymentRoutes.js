@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 
 const razorpay = require("../config/razorpay");
+const { protect } = require("../middleware/authMiddleware");
 
-router.post("/create-order", async (req, res) => {
+router.post("/create-order", protect, async (req, res) => {
   try {
     const options = {
       amount: Number(req.body.amount * 100),
