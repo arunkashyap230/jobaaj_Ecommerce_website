@@ -109,7 +109,12 @@ function ProductDetails() {
             <div className="pd-price">₹{product.price?.toFixed(2)}</div>
 
             {/* DESCRIPTION */}
-            <p className="pd-desc">{product.description}</p>
+            <div className="pd-desc-card">
+              <h3>Product Description</h3>
+              <div className="pd-desc-scroll">
+                <p className="pd-desc">{product.description}</p>
+              </div>
+            </div>
 
             {/* ACTIONS */}
             {product.countInStock > 0 && (

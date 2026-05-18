@@ -51,7 +51,7 @@
 }
 
 .pd-name {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: clamp(1.8rem, 3.5vw, 2.6rem);
   margin-bottom: 16px;
   line-height: 1.15;
@@ -97,18 +97,48 @@
 }
 
 .pd-price {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 2.5rem;
   font-weight: 700;
   color: var(--primary);
   margin-bottom: 20px;
 }
 
+.pd-desc-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 32px;
+  box-shadow: var(--shadow);
+}
+
+.pd-desc-card h3 {
+  font-size: 1rem;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.pd-desc-scroll {
+  max-height: 180px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.pd-desc-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.pd-desc-scroll::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+
 .pd-desc {
   color: var(--text-muted);
   line-height: 1.75;
-  margin-bottom: 32px;
   font-size: 1rem;
+  white-space: pre-line;
 }
 
 .pd-actions {
@@ -171,6 +201,15 @@
 }
 
 @media (max-width: 768px) {
-  .pd-grid { grid-template-columns: 1fr; gap: 32px; }
-  .pd-perks { grid-template-columns: 1fr; gap: 12px; }
+  .pd-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .pd-desc-scroll {
+    max-height: 150px;
+  }
+  .pd-perks {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
 }
