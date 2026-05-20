@@ -54,7 +54,7 @@ function Checkout() {
       });
 
       const options = {
-        key: process.env.REACT_APP_RAZORPAY_KEY_ID || "rzp_test_SqL9w2TxJlNFnL",
+        key: process.env.REACT_APP_RAZORPAY_KEY_ID || "rzp_live_SrZnzYhA1aWJU6",
 
         amount: data.amount,
 
